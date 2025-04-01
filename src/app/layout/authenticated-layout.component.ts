@@ -8,9 +8,9 @@ import {
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { Register, Login, ILoginResponse } from '../models/auth';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { UserLocalStorageService } from '../services/user-local-storage.service';
+import { UserLocalStorageService } from '../services/user-local-storage/user-local-storage.service';
 
 @Component({
   selector: 'app-authenticated-layout',

@@ -1,1 +1,176 @@
-<p>goal-list works!</p>
+<!-- Goals Content -->
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold">Goals</h1>
+    <button class="btn btn-primary" (click)="openGoalModal()">
+      <i class="fas fa-plus me-2"></i>New Goal
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card goal-card">
+        <div class="card-body">
+          <h5 class="card-title">Learn Web Development</h5>
+          <div class="progress mb-3">
+            <div class="progress-bar" role="progressbar" style="width: 60%">
+              60%
+            </div>
+          </div>
+          <h6 class="card-subtitle mb-3">Milestones:</h6>
+          <ul class="list-group">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              HTML & CSS
+              <span class="badge bg-success rounded-pill">Completed</span>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              JavaScript
+              <span class="badge bg-warning rounded-pill">In Progress</span>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              React.js
+              <span class="badge bg-secondary rounded-pill">Pending</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div class="modal goalModal" #goalModal tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Goal</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="closeGoalModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="goalForm">
+          <div class="row">
+            <div class="col-7">
+              <div class="mb-3">
+                <label class="form-label">Goal Title</label>
+                <input
+                  type="text"
+                  formControlName="goalName"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="mb-3">
+                    <label class="form-label">Start Date</label>
+                    <input
+                      type="date"
+                      formControlName="startDate"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="mb-3">
+                    <label class="form-label">Target Date</label>
+                    <input
+                      type="date"
+                      formControlName="endDate"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea
+                  formControlName="description"
+                  class="form-control"
+                ></textarea>
+              </div>
+            </div>
+            <div class="col-5" formArrayName="milestones">
+              @for (item of milestoneList.controls; track item) {
+              <ng-container [formGroupName]="$index">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1">
+                      <label class="form-label">Milestone Title</label>
+                      <input
+                        type="text"
+                        formControlName="milestoneName"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1">
+                      <label class="form-label">Milestone Target Date</label>
+                      <input
+                        type="date"
+                        formControlName="targetDate"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-8">
+                    <label class="form-label">Milestone Description</label>
+                    <textarea
+                      formControlName="description"
+                      class="form-control"
+                    ></textarea>
+                  </div>
+                  <div class="col-4 text-end">
+                    <button
+                    class="btn btn-outline-danger mt-5"
+                    type="button"
+                    (click)="removeMileStoneForm($index)"
+                  >
+                    remove
+                  </button>
+                  </div>
+                </div>
+              </ng-container>
+              }
+              <div class="row">
+                <div class="col-12 text-end">
+                  <button
+                    class="btn btn-outline-primary mt-5"
+                    type="button"
+                    (click)="createNewMileStoneForm()"
+                  >
+                    + Add New Milestones
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="closeGoalModal()"
+        >
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success" (click)="onSaveGoal()">Create Goal</button>
+      </div>
+    </div>
+  </div>
+</div>

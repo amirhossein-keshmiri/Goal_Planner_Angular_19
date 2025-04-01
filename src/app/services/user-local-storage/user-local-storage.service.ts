@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { ILoginResponse } from '../models/auth';
+import { ILoginResponse } from '../../models/auth';
 
 @Injectable({
   providedIn: 'root'
