@@ -1,32 +1,163 @@
-    <!-- Main Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-          <a class="navbar-brand fw-bold" href="index.html">
-              <i class="fas fa-check-double me-2"></i>TaskMaster Pro
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav me-auto">
-                  <li class="nav-item">
-                      <a class="nav-link active" href="index.html">Dashboard</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="tasks.html">Tasks</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="goals.html">Goals</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="reminders.html">Reminders</a>
-                  </li>
-              </ul>
-              <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#authModal">
-                  <i class="fas fa-user me-2"></i>Login
-              </button>
-          </div>
-      </div>
-  </nav>
+<!-- Main Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">
+      <i class="fas fa-check-double me-2"></i>TaskMaster Pro
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/home">Home</a>
+        </li>
+        @if(currentUser){
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/tasks">Tasks</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/goals">Goals</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/reminders">Reminders</a>
+        </li>
+        }
+      </ul>
+      @if(currentUser){
+      <span class="navbar-text text-white">
+        Welcome, {{currentUser.fullName}}
+      </span>
+      <button class="btn btn-outline-light mx-2" (click)="userLocalStorageService.ClearUser()">
+        <i class="fas fa-user me-2"></i>Logout
+      </button>
+      } @else {
+      <button class="btn btn-outline-light" (click)="openModal()">
+        <i class="fas fa-user me-2"></i>Login
+      </button>
+      }
+    </div>
+  </div>
+</nav>
 
 <router-outlet />
+
+<!-- Auth Modal -->
+<div class="modal" #loginModal tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <div class="text-center mb-4">
+          <h4 class="modal-title fw-bold" id="authModalTitle">Welcome Back!</h4>
+          <button
+            type="button"
+            class="btn-close position-absolute top-0 end-0 m-3"
+            (click)="closeModal()"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+
+        @if(isLoginFormVisible()) {
+        <!-- Login Form -->
+        <form id="loginForm" class="needs-validation">
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email"
+              [(ngModel)]="loginObj.emailId"
+              name="emailId"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Password"
+              [(ngModel)]="loginObj.password"
+              name="password"
+              required
+            />
+          </div>
+          <button type="button" class="btn btn-primary w-100 mb-3" (click)="onLogin()">
+            Login
+          </button>
+          <p class="text-center">
+            Don't have an account?
+            <a id="showSignup" class="text-decoration-none" (click)="toggleForm()">Sign Up</a>
+          </p>
+        </form>
+        } @else {
+        <!-- Signup Form (Hidden by default) -->
+        <form id="signupForm" class="needs-validation">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Full Name"
+              [(ngModel)]="registerObj.fullName"
+              name="fullName"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email"
+              [(ngModel)]="registerObj.emailId"
+              name="emailId"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Password"
+              [(ngModel)]="registerObj.password"
+              name="password"
+              required
+            />
+          </div>
+          <!-- <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirm Password"
+              [(ngModel)]="registerObj.password"
+              required
+            />
+          </div> -->
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Mobile Number"
+              [(ngModel)]="registerObj.mobileNo"
+              name="mobileNo"
+              required
+            />
+          </div>
+          <button type="button" class="btn btn-primary w-100 mb-3" (click)="onRegister()">
+            Sign Up
+          </button>
+          <p class="text-center">
+            Already have an account?
+            <a id="showLogin" class="text-decoration-none" (click)="toggleForm()">Login</a>
+          </p>
+        </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>
