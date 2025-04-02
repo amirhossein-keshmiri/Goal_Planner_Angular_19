@@ -1,5 +1,5 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { Goal } from '../../models/goal';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Goal, IGoalResponse } from '../../models/goal';
 import { GoalService } from '../../services/goal/goal.service';
 import {
   FormControl,
@@ -9,19 +9,21 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { UserLocalStorageService } from '../../services/user-local-storage/user-local-storage.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-goal-list',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './goal-list.component.html',
   styleUrl: './goal-list.component.css',
 })
-export class GoalListComponent {
+export class GoalListComponent implements OnInit {
   goalService = inject(GoalService);
   toastr = inject(ToastrService);
   userLocalStorageService = inject(UserLocalStorageService);
 
-  // goalList = signal<Goal[]>([]);
+  // goalList= IGoalResponse[] = [];
+  goalList= signal<IGoalResponse[]>([]);
 
   goalForm: FormGroup = new FormGroup({});
 
@@ -29,6 +31,10 @@ export class GoalListComponent {
     this.initializeForm();
     this.createNewMileStoneForm();
     this.goalForm.get('userId')?.setValue(this.currentUser?.userId);
+  }
+
+  ngOnInit(): void {
+   this.getAllGoalsCreatedByMe();
   }
 
   initializeForm() {
@@ -92,11 +98,26 @@ export class GoalListComponent {
       next: (res: any) => {
         this.toastr.success('Goal Create Successful');
         this.closeGoalModal();
+        this.getAllGoalsCreatedByMe();
       },
       error: (err) => {
-        // this.toastr.error('An error occurred while saving the goal');
-        this.toastr.error(err.error.title);
+        this.toastr.error('An error occurred while saving the goal');
+        // this.toastr.error(err.error.title);
       },
     });
+  }
+  getAllGoalsCreatedByMe() {
+    if (this.currentUser?.userId) {
+      this.goalService.getAllGoalsByUser(this.currentUser.userId)
+        .subscribe({
+          next: (goals: IGoalResponse[]) => {
+            // this.goalList = goals
+            this.goalList.set(goals)
+          },
+          error: (err) => {
+            this.toastr.error('Error fetching goals');
+          }
+        });
+    }
   }
 }

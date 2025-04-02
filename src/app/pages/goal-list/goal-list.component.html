@@ -8,10 +8,11 @@
   </div>
 
   <div class="row">
+    @for (item of goalList(); track $index) {
     <div class="col-md-6 mb-4">
       <div class="card goal-card">
         <div class="card-body">
-          <h5 class="card-title">Learn Web Development</h5>
+          <h5 class="card-title">{{item.goalName}}</h5>
           <div class="progress mb-3">
             <div class="progress-bar" role="progressbar" style="width: 60%">
               60%
@@ -22,25 +23,26 @@
             <li
               class="list-group-item d-flex justify-content-between align-items-center"
             >
-              HTML & CSS
-              <span class="badge bg-success rounded-pill">Completed</span>
+              Start Date
+              <span class="badge bg-success rounded-pill">{{item.startDate | date:'yyyy-MM-dd'}}</span>
             </li>
             <li
               class="list-group-item d-flex justify-content-between align-items-center"
             >
-              JavaScript
-              <span class="badge bg-warning rounded-pill">In Progress</span>
+              End Date
+              <span class="badge bg-warning rounded-pill">{{item.endDate| date:'yyyy-MM-dd' }}</span>
             </li>
             <li
               class="list-group-item d-flex justify-content-between align-items-center"
             >
-              React.js
-              <span class="badge bg-secondary rounded-pill">Pending</span>
+              Description
+              <span class="badge bg-secondary rounded-pill">{{item.description}}</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
+    }
   </div>
 </div>
 
@@ -135,12 +137,12 @@
                   </div>
                   <div class="col-4 text-end">
                     <button
-                    class="btn btn-outline-danger mt-5"
-                    type="button"
-                    (click)="removeMileStoneForm($index)"
-                  >
-                    remove
-                  </button>
+                      class="btn btn-outline-danger mt-5"
+                      type="button"
+                      (click)="removeMileStoneForm($index)"
+                    >
+                      remove
+                    </button>
                   </div>
                 </div>
               </ng-container>
@@ -169,7 +171,9 @@
         >
           Cancel
         </button>
-        <button type="button" class="btn btn-success" (click)="onSaveGoal()">Create Goal</button>
+        <button type="button" class="btn btn-success" (click)="onSaveGoal()">
+          Create Goal
+        </button>
       </div>
     </div>
   </div>

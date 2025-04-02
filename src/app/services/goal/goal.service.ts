@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Goal } from '../../models/goal';
+import { Goal, IGoalResponse } from '../../models/goal';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +14,7 @@ export class GoalService {
     return this.http.post(this.API_URL + 'createGoalWithMilestones', goalObj);
   }
   
-  // getGoals(){
-  //   return this.http.get(this.API_URL + 'getGoals');
-  // }
+  getAllGoalsByUser(userId: number){
+    return this.http.get<IGoalResponse[]>(this.API_URL + 'getAllGoalsByUser?userId=' + userId);
+  }
 }
