@@ -1,4 +1,12 @@
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Goal, IGoalResponse } from '../../models/goal';
 import { GoalService } from '../../services/goal/goal.service';
 import {
@@ -10,6 +18,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { UserLocalStorageService } from '../../services/user-local-storage/user-local-storage.service';
 import { DatePipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-goal-list',
@@ -17,14 +26,14 @@ import { DatePipe } from '@angular/common';
   templateUrl: './goal-list.component.html',
   styleUrl: './goal-list.component.css',
 })
-export class GoalListComponent implements OnInit {
+export class GoalListComponent implements OnInit, OnDestroy {
   goalService = inject(GoalService);
   toastr = inject(ToastrService);
   userLocalStorageService = inject(UserLocalStorageService);
 
   // goalList= IGoalResponse[] = [];
-  goalList= signal<IGoalResponse[]>([]);
-
+  goalList = signal<IGoalResponse[]>([]);
+  subscriptionList: Subscription[] = [];
   goalForm: FormGroup = new FormGroup({});
 
   constructor() {
@@ -34,7 +43,7 @@ export class GoalListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   this.getAllGoalsCreatedByMe();
+    this.getAllGoalsCreatedByMe();
   }
 
   initializeForm() {
@@ -108,16 +117,22 @@ export class GoalListComponent implements OnInit {
   }
   getAllGoalsCreatedByMe() {
     if (this.currentUser?.userId) {
-      this.goalService.getAllGoalsByUser(this.currentUser.userId)
-        .subscribe({
-          next: (goals: IGoalResponse[]) => {
-            // this.goalList = goals
-            this.goalList.set(goals)
-          },
-          error: (err) => {
-            this.toastr.error('Error fetching goals');
-          }
-        });
+      const newSub = this.goalService.getAllGoalsByUser(this.currentUser.userId).subscribe({
+        next: (goals: IGoalResponse[]) => {
+          // this.goalList = goals
+          this.goalList.set(goals);
+        },
+        error: (err) => {
+          this.toastr.error('Error fetching goals');
+        },
+      });
+      this.subscriptionList.push(newSub);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionList.forEach(element =>{
+      element.unsubscribe();
+    })
   }
 }
