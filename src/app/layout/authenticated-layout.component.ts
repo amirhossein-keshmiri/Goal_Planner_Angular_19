@@ -67,7 +67,6 @@ export class AuthenticatedLayoutComponent {
         this.closeModal();
       },
       error: (err) => {
-        debugger;
         this.toastr.error(JSON.stringify(err.error));
       },
     });

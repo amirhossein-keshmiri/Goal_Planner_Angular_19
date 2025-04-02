@@ -1,1 +1,62 @@
-<p>reminders works!</p>
+    <!-- Reminders Content -->
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="fw-bold">Reminders</h1>
+            <button class="btn btn-primary" (click)="openReminderModal()">
+                <i class="fas fa-plus me-2"></i>New Reminder
+            </button>
+        </div>
+
+        <div class="row">
+            @for (item of reminderList$ | async; track $index) {
+                <div class="col-md-4 mb-4">
+                    <div class="card reminder-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.title}}</h5>
+                            <p class="card-text"><i class="far fa-clock me-2"></i>{{item.reminderDateTime | date: "yyyy/MM/dd, h:mm a" }}</p>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-outline-danger me-2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Reminder Modal -->
+    <div class="modal" #reminderModal tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Reminder</h5>
+                    <button type="button" class="btn-close" (click)="closeReminderModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Reminder Title</label>
+                            <input type="text" [(ngModel)]="newReminder.title" name="title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date & Time</label>
+                            <input type="datetime-local" [(ngModel)]="newReminder.reminderDateTime" name="reminderDateTime" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" [(ngModel)]="newReminder.description" name="description" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeReminderModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="onSaveReminder()">Create Reminder</button>
+                </div>
+            </div>
+        </div>
+    </div>

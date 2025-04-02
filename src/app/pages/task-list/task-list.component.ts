@@ -47,7 +47,6 @@ export class TaskListComponent {
   }
 
   onSaveTask() {
-    debugger;
     this.taskService.createTask(this.newTask).subscribe({
       next: (res: ITaskResponse) => {
         this.toastr.success('Task Create Successful');
